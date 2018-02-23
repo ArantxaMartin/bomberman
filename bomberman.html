@@ -10,7 +10,9 @@
 	
 </head>
 
-<body onkeydown="desplazar(event);">
+<body onkeydown="desplazar(event);" onload="countDown();">
+	<div id="contenedor">
+		<div id="divTiempo">Time: <p id="tiempo"></p></div>
 	<div id="escenario">
 		
 		<div class="blocks" id="blocks">
@@ -19,8 +21,9 @@
 	</div>
 	<div id="ganador"><img src="./img/Bomberman.png" ></div>
 	<div id="perdedor"><img src="./img/gameOver.png" class="img_perdedor"></div>
+</div>
 
-	
+	</div>
 <script type="text/javascript">
 $("#ganador").hide();
 $("#perdedor").hide();
@@ -30,7 +33,7 @@ var escenario=[
 [{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2}],
 [{type:2},{type:0},{type:0},{type:0},{type:1,after_type:6},{type:1},{type:1},{type:0},{type:0},{type:1},{type:1},{type:1},{type:1},{type:1},{type:2}],
 [{type:2},{type:0},{type:2},{type:1,after_type:6},{type:2},{type:1},{type:2},{type:0},{type:2},{type:0},{type:2},{type:1,after_type:6},{type:2},{type:0},{type:2}],
-[{type:2},{type:1},{type:1},{type:0},{type:0},{type:0},{type:1,after_type:4},{type:0},{type:1,after_type:7},{type:0},{type:3},{type:0},{type:1},{type:1},{type:2}],
+[{type:2},{type:1},{type:1},{type:0},{type:0},{type:0},{type:1,after_type:4},{type:0},{type:1,after_type:4},{type:0},{type:3},{type:0},{type:1},{type:1},{type:2}],
 [{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2}],
 [{type:2},{type:0},{type:1},{type:1},{type:0},{type:0},{type:1},{type:1},{type:0},{type:0},{type:0},{type:1},{type:1},{type:1},{type:2}],
 [{type:2},{type:1},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2}],
@@ -40,7 +43,7 @@ var escenario=[
 [{type:2},{type:0},{type:2},{type:0},{type:2},{type:1},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2}],
 [{type:2},{type:1},{type:0},{type:0},{type:1},{type:0},{type:0},{type:0},{type:0},{type:0},{type:0},{type:0},{type:1},{type:0},{type:2}],
 [{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2}],
-[{type:2},{type:1,after_type:6},{type:1},{type:1,after_type:4},{type:0},{type:1},{type:1},{type:0},{type:1},{type:1},{type:1},{type:0},{type:0},{type:1},{type:2}],
+[{type:2},{type:1,after_type:7},{type:1},{type:1,after_type:4},{type:0},{type:1},{type:1},{type:0},{type:1},{type:1},{type:1},{type:0},{type:0},{type:1},{type:2}],
 [{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2}]
 		
 	];
@@ -481,6 +484,7 @@ mapa();
 		muerte= true;
 		$('#img_jugador').remove();
 		$('#jugador').append('<img src="./img/perdedor.gif" id="img_perdedor">');
+		clearInterval(intervalo);
 		setTimeout(function(){
 			$('#perdedor').show();
 			},2000);
@@ -502,6 +506,7 @@ mapa();
 		$('#img_jugador').remove();
 		$('#jugador').append('<img src="./img/ganador.gif" id="img_ganador">');
 		setTimeout(function(){$('#ganador').show();},2000);
+		clearInterval(intervalo);
 			document.onkeydown = function (objeto){
 			        var teclado = objeto.which;
 			        switch (teclado){
@@ -514,6 +519,20 @@ mapa();
 			    }
 		
 	}
+
+var intervalo=0;
+function countDown(){
+var count = 120;
+var number = document.getElementById('tiempo');
+intervalo = setInterval(function(){
+                   count--; 
+                   number.innerHTML = count;
+                   if(count == 0){
+                     clearInterval(intervalo);
+                    gameOver();
+                   }
+                  }, 1000);
+}
 
 </script>
 
