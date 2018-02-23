@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/styleBomberman.css">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+	<title>Juego</title>
+	
+</head>
+
+<body onkeydown="desplazar(event);">
+	<div id="escenario">
+		
+		<div class="blocks" id="blocks">
+			
+
+	</div>
+	<div id="ganador"><img src="./img/Bomberman.png" ></div>
+	<div id="perdedor"><img src="./img/gameOver.png" class="img_perdedor"></div>
+
+	
+<script type="text/javascript">
+$("#ganador").hide();
+$("#perdedor").hide();
+
+ 
+var escenario=[
+[{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2}],
+[{type:2},{type:0},{type:0},{type:0},{type:1,after_type:6},{type:1},{type:1},{type:0},{type:0},{type:1},{type:1},{type:1},{type:1},{type:1},{type:2}],
+[{type:2},{type:0},{type:2},{type:1,after_type:6},{type:2},{type:1},{type:2},{type:0},{type:2},{type:0},{type:2},{type:1,after_type:6},{type:2},{type:0},{type:2}],
+[{type:2},{type:1},{type:1},{type:0},{type:0},{type:0},{type:1,after_type:4},{type:0},{type:1,after_type:7},{type:0},{type:3},{type:0},{type:1},{type:1},{type:2}],
+[{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2}],
+[{type:2},{type:0},{type:1},{type:1},{type:0},{type:0},{type:1},{type:1},{type:0},{type:0},{type:0},{type:1},{type:1},{type:1},{type:2}],
+[{type:2},{type:1},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2}],
+[{type:2},{type:1},{type:1,after_type:5},{type:0},{type:0},{type:1},{type:0},{type:0},{type:0},{type:1},{type:1},{type:1},{type:1},{type:0},{type:2}],
+[{type:2},{type:1,after_type:4},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2}],
+[{type:2},{type:1},{type:1},{type:1},{type:1},{type:1},{type:1,after_type:4},{type:1},{type:0},{type:0},{type:1},{type:0},{type:0},{type:1,after_type:5},{type:2}],
+[{type:2},{type:0},{type:2},{type:0},{type:2},{type:1},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2}],
+[{type:2},{type:1},{type:0},{type:0},{type:1},{type:0},{type:0},{type:0},{type:0},{type:0},{type:0},{type:0},{type:1},{type:0},{type:2}],
+[{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:0},{type:2},{type:1},{type:2},{type:0},{type:2},{type:1},{type:2}],
+[{type:2},{type:1,after_type:6},{type:1},{type:1,after_type:4},{type:0},{type:1},{type:1},{type:0},{type:1},{type:1},{type:1},{type:0},{type:0},{type:1},{type:2}],
+[{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2},{type:2}]
+		
+	];
+////////////////////dibujar mapa//////////////////////
+function mapa(){
+	$('.blocks').empty();
+	for (var i = 0; i < escenario.length; i++) {
+		for (var j = 0; j < escenario[i].length; j++) {
+			if(escenario[i][j].bomba){
+				$('.blocks').append('<div id="bomba" class="block bomba cell-'+i+'-'+j+'"><img src="./img/bomba.png" id="img_bomba"></div>');
+			}
+			if(escenario[i][j].type==3){
+				$('.blocks').append('<div id="jugador" class="block jugador cell-'+i+'-'+j+'"><img src="./img/jugador.png" id="img_jugador"></div>');
+			}
+			if(escenario[i][j].type==2){
+				$('.blocks').append('<div class="block muro cell-'+i+'-'+j+'"><img src="./img/muro.png" class="img_block" id="img_muro"></div>');
+			}
+			if(escenario[i][j].type==1){
+				$('.blocks').append('<div class="block obstaculo cell-'+i+'-'+j+'"><img src="./img/obstaculo.png" class="img_block" id="img_obstaculo"></div>');
+			}
+			if(escenario[i][j].type==0){
+				$('.blocks').append('<div class="block suelo cell-'+i+'-'+j+'"><div class="img_block" id="suelo"></div>');
+			}
+			if(escenario[i][j].type==4){
+				$('.blocks').append('<div class="block obstaculo cell-'+i+'-'+j+'"><img src="./img/moreBomb.png" class="img_block" id="img_obstaculo"></div>');
+			}
+			if(escenario[i][j].type==5){
+				$('.blocks').append('<div class="block obstaculo cell-'+i+'-'+j+'"><img src="./img/mueres.png" class="img_block" id="img_obstaculo"></div>');
+			}
+			if(escenario[i][j].type==6){
+				$('.blocks').append('<div class="block obstaculo cell-'+i+'-'+j+'"><img src="./img/masExplosion.png" class="img_block" id="img_obstaculo"></div>');
+			}
+			if(escenario[i][j].type==7){
+				$('.blocks').append('<div class="block obstaculo cell-'+i+'-'+j+'"><img src="./img/watermelon.png" class="img_block" id="img_melon"></div>');
+			}
+
+		}
+	}
+}
+mapa();
+	function existBomb(){
+	for (var i = 0; i < escenario.length; i++) {
+	    for (var j = 0; j < escenario[i].length; j++){
+	        if(escenario[i][j].bomba){
+	        	return true;
+	        } 	
+	    } 
+	}
+	return false;   
+}
+	//////////////////POSICION JUGADOR/////////////////////
+	function getPlayer(){
+       		for (var i = 0; i < escenario.length; i++) {
+				for (var j = 0; j < escenario[i].length; j++) {
+					if(escenario[i][j].type==3){
+						return  i+":"+j;
+					}
+				}
+			}
+       	}
+
+
+
+
+    ///////////////bombas//////////////////////
+    function getBomb(){
+       		for (var i = 0; i < escenario.length; i++) {
+				for (var j = 0; j < escenario[i].length; j++) {
+					if(escenario[i][j].bomba){
+						return  i+":"+j;
+					}
+				}
+			}
+       	}
+
+    function bombs(){
+    	var jugadorPos=getPlayer();
+        jugadorPos=jugadorPos.split(":");
+        var i = parseInt(jugadorPos[0]);
+        var j = parseInt(jugadorPos[1]); 
+
+        escenario[i][j].bomba=true;
+        setTimeout(explosion, 2000);
+    }
+
+    function explosion(){
+    	var bombaPos=getBomb();
+        bombaPos=bombaPos.split(":");
+        var i = parseInt(bombaPos[0]);
+        var j = parseInt(bombaPos[1]); 
+
+
+    	$( "#img_bomba" ).remove();
+    	if(escenario[i][j].bomba && masExplosion==false){
+    		$('#bomba').append('<img src="./img/centro.png">');
+	    		if(escenario[i][j-1].type==0){
+	    			$(".cell-"+i+"-"+(j-1) +' .img_block').append('<img src="./img/izquierda.png" id="explosion">');
+		    	}
+		    	if(escenario[i][j+1].type==0){
+		    		$(".cell-"+i+"-"+(j+1) +' .img_block').append('<img src="./img/derecha.png" id="explosion">');
+		    	}
+		    	if(escenario[i+1][j].type==0){
+		    		$(".cell-"+(i+1)+"-"+j +' .img_block').append('<img src="./img/abajo.png" id="explosion">');
+		    	}
+		    	if(escenario[i-1][j].type==0){
+		    		$(".cell-"+(i-1)+"-"+j +' .img_block').append('<img src="./img/arriba.png" id="explosion">');
+		    	}
+		    	if(escenario[i][j].type==3 ||
+		    		escenario[i][j-1].type==3 || 
+		    		escenario[i][j+1].type==3 || 
+		    		escenario[i+1][j].type==3 ||
+		    		escenario[i-1][j].type==3){
+		    		gameOver();
+		    	}
+
+		    	if(escenario[i][j-1].type==1){
+		    		escenario[i][j-1].type=1;
+            		escenario[i][j-1].type= escenario[i][j-1].after_type ? escenario[i][j-1].after_type : 0;	
+		    	}
+		    	if(escenario[i][j+1].type==1){
+		    		escenario[i][j+1].type=1;
+            		escenario[i][j+1].type= escenario[i][j+1].after_type ? escenario[i][j+1].after_type : 0;
+		    	}
+		    	if(escenario[i-1][j].type==1){
+		    		escenario[i-1][j].type=1;
+            		escenario[i-1][j].type= escenario[i-1][j].after_type ? escenario[i-1][j].after_type : 0;
+		    	}
+		    	if(escenario[i+1][j].type==1){
+		    		escenario[i+1][j].type=1;
+            		escenario[i+1][j].type= escenario[i+1][j].after_type ? escenario[i+1][j].after_type : 0;
+		    	}
+    	}
+
+    	if(escenario[i][j].bomba && masExplosion==true){
+    		$('#bomba').append('<img src="./img/centro.png">');
+	    		
+		    	if(escenario[i][j-1].type==0 || escenario[i][j-1].type==1){
+	    			$(".cell-"+i+"-"+(j-1) +' .img_block').append('<img src="./img/horizontal.png" id="explosion">');
+	    			if(escenario[i][j-2].type==0 || escenario[i][j-2].type==1){
+	    				$(".cell-"+i+"-"+(j-2) +' .img_block').append('<img src="./img/horizontal.png" id="explosion">');
+	    				if(escenario[i][j-3].type==0 || escenario[i][j+3].type==1){
+	    					$(".cell-"+i+"-"+(j-3) +' .img_block').append('<img src="./img/izquierda.png" id="explosion">');
+		    			}
+		    		}
+		    	}
+		    	if(escenario[i][j+1].type==0 || escenario[i][j+1].type==1){
+		    		$(".cell-"+i+"-"+(j+1) +' .img_block').append('<img src="./img/horizontal.png" id="explosion">');
+		    		if(escenario[i][j+2].type==0 || escenario[i][j+2].type==1){
+		    			$(".cell-"+i+"-"+(j+2) +' .img_block').append('<img src="./img/horizontal.png" id="explosion">');
+		    			if(escenario[i][j+3].type==0 || escenario[i][j+3].type==1){
+		    				$(".cell-"+i+"-"+(j+3) +' .img_block').append('<img src="./img/derecha.png" id="explosion">');
+		    			}
+		    		}
+		    	}
+		    	if(escenario[i+1][j].type==0 || escenario[i+1][j].type==1){
+		    		$(".cell-"+(i+1)+"-"+j +' .img_block').append('<img src="./img/vertical.png" id="explosion">');
+		    		if(escenario[i+2][j].type==0 || escenario[i+2][j].type==1){
+		    			$(".cell-"+(i+2)+"-"+j +' .img_block').append('<img src="./img/vertical.png" id="explosion">');
+		    			if(escenario[i+3][j].type==0 || escenario[i+3][j].type==1){
+		    				$(".cell-"+(i+3)+"-"+j +' .img_block').append('<img src="./img/abajo.png" id="explosion">');
+		    			}
+		    		}
+		    	}
+		    	
+		    	
+		    	if(escenario[i-1][j].type==0 || escenario[i-1][j].type==1){
+		    		$(".cell-"+(i-1)+"-"+j +' .img_block').append('<img src="./img/vertical.png" id="explosion">');
+		    		if(escenario[i-2][j].type==0 || escenario[i-2][j].type==1){
+		    			$(".cell-"+(i-2)+"-"+j +' .img_block').append('<img src="./img/vertical.png" id="explosion">');
+		    			if(escenario[i-3][j].type==0 || escenario[i-3][j].type==1){
+		    				$(".cell-"+(i-3)+"-"+j +' .img_block').append('<img src="./img/arriba.png" id="explosion">');
+		    			}
+		    		}
+		    			
+		    	}
+
+
+		    	if(escenario[i][j].type==3 ||
+		    		escenario[i][j-1].type==3 || 
+		    		escenario[i][j+1].type==3 || 
+		    		escenario[i+1][j].type==3 ||
+		    		escenario[i-1][j].type==3){
+		    		gameOver();
+		    	}
+
+		    	if(escenario[i][j-1].type==1){
+		    		escenario[i][j-1].type=1;
+            		escenario[i][j-1].type= escenario[i][j-1].after_type ? escenario[i][j-1].after_type : 0;	
+            		if(escenario[i][j-2].type==1){
+		    			escenario[i][j-2].type=1;
+            			escenario[i][j-2].type= escenario[i][j-2].after_type ? escenario[i][j-2].after_type : 0;	
+            			if(escenario[i][j-3].type==1){
+		    				escenario[i][j-3].type=1;
+            				escenario[i][j-3].type= escenario[i][j+3].after_type ? escenario[i][j+3].after_type : 0;
+		    			}
+		    		}
+		    	}
+		    	if(escenario[i][j+1].type==1){
+		    		escenario[i][j+1].type=1;
+            		escenario[i][j+1].type= escenario[i][j+1].after_type ? escenario[i][j+1].after_type : 0;
+            		if(escenario[i][j+2].type==1){
+		    			escenario[i][j+2].type=1;
+            			escenario[i][j+2].type= escenario[i][j+2].after_type ? escenario[i][j+2].after_type : 0;
+            			if(escenario[i][j+3].type==1){
+		    				escenario[i][j+3].type=3;
+            				escenario[i][j+3].type= escenario[i][j-3].after_type ? escenario[i][j-3].after_type : 0;	
+		    			}
+		    		}
+		    	}
+		    	if(escenario[i-1][j].type==1){
+		    		escenario[i-1][j].type=1;
+            		escenario[i-1][j].type= escenario[i-1][j].after_type ? escenario[i-1][j].after_type : 0;
+            		if(escenario[i-2][j].type==1){
+		    			escenario[i-2][j].type=1;
+            			escenario[i-2][j].type= escenario[i-2][j].after_type ? escenario[i-2][j].after_type : 0;
+            			if(escenario[i-3][j].type==1){
+		    				escenario[i-3][j].type=1;
+            				escenario[i-3][j].type= escenario[i-3][j].after_type ? escenario[i-3][j].after_type : 0;
+		    			}
+		    		}
+		    	}
+		    	if(escenario[i+1][j].type==1){
+		    		escenario[i+1][j].type=1;
+            		escenario[i+1][j].type= escenario[i+1][j].after_type ? escenario[i+1][j].after_type : 0;
+            		if(escenario[i+2][j].type==1){
+		    			escenario[i+2][j].type=1;
+            			escenario[i+2][j].type= escenario[i+2][j].after_type ? escenario[i+2][j].after_type : 0;
+            			if(escenario[i+3][j].type==1){
+		    				escenario[i+3][j].type=1;
+            				escenario[i+3][j].type= escenario[i+3][j].after_type ? escenario[i+3][j].after_type : 0;
+		    			}
+		    		}
+		    	} 	
+		    	
+    	}
+
+    	if(muerte==false){
+    		setTimeout(function(){mapa();},1000);
+    		escenario[i][j].bomba=false;
+    	}
+    	
+
+
+    	
+    }
+    ////////////////premios////////////////////
+    var premioBomba=false;
+ 	var masExplosion=false;
+ 	var muerte=false;
+    function moreBombs(){
+    	if(premioBomba){
+    		setTimeout(fin,8000);
+    	}
+    }
+   
+
+    function fin(){
+    	premioBomba=false;
+    	masExplosion=false;
+    }
+
+
+
+	////////////////mover//////////////////////
+
+
+    function desplazar(objeto){
+    var tecla = objeto.which;
+
+        switch (tecla){
+            case 37 :   
+            	var jugadorPos=getPlayer();
+            	jugadorPos=jugadorPos.split(":");
+            	var i = parseInt(jugadorPos[0]);
+            	var j = parseInt(jugadorPos[1]); 
+            	if(escenario[i][j-1].type==0 && !escenario[i][j-1].bomba){
+            		escenario[i][j-1].type=3;
+            		escenario[i][j].type=0;
+            		mapa();
+            	}
+            	if(escenario[i][j-1].type==4){
+            		escenario[i][j-1].type=3;
+            		escenario[i][j].type=0;
+            		premioBomba=true;
+            		moreBombs();
+            		mapa();
+            		
+            	}
+            	if(escenario[i][j-1].type==5){
+            		escenario[i][j-1].type=3;
+            		escenario[i][j].type=0;
+            		gameOver();
+            		
+            	}
+            	if(escenario[i][j-1].type==6){
+            		escenario[i][j-1].type=3;
+            		escenario[i][j].type=0;
+            		masExplosion=true;
+            		if(masExplosion){
+    					setTimeout(fin,6000);
+    				}
+            		mapa();
+            	}
+            	if(escenario[i][j-1].type==7){
+            		escenario[i][j-1].type=3;
+            		escenario[i][j].type=0;
+            		win();
+            		
+            	}
+
+	        break;
+            case 39 : 
+	        	var jugadorPos=getPlayer();
+            	jugadorPos=jugadorPos.split(":");
+            	var i = parseInt(jugadorPos[0]);
+            	var j = parseInt(jugadorPos[1]); 
+            	if(escenario[i][j+1].type==0 && !escenario[i][j+1].bomba){
+            		escenario[i][j+1].type=3;
+            		escenario[i][j].type=0;
+            		mapa();
+            	}
+            	if(escenario[i][j+1].type==4){
+            		escenario[i][j+1].type=3;
+            		escenario[i][j].type=0;
+            		premioBomba=true;
+            		moreBombs(premioBomba);
+            		mapa();
+            		
+            	}
+            	if(escenario[i][j+1].type==5){
+            		escenario[i][j+1].type=3;
+            		escenario[i][j].type=0;
+            		gameOver();
+            		
+            	}
+            	if(escenario[i][j+1].type==6){
+            		escenario[i][j+1].type=3;
+            		escenario[i][j].type=0;
+            		masExplosion=true;
+            		if(masExplosion){
+    					setTimeout(fin,6000);
+    				}
+            		mapa();
+            	}
+
+	        break;
+
+	        case 38 :   
+	        	var jugadorPos=getPlayer();
+            	jugadorPos=jugadorPos.split(":");
+            	var i = parseInt(jugadorPos[0]);
+            	var j = parseInt(jugadorPos[1]); 
+            	if(escenario[i-1][j].type==0 && !escenario[i-1][j].bomba){
+            		escenario[i-1][j].type=3;
+            		escenario[i][j].type=0;
+            		mapa();
+            	}
+            	if(escenario[i-1][j].type==4){
+            		escenario[i-1][j].type=3;
+            		escenario[i][j].type=0;
+            		premioBomba=true;
+            		moreBombs(premioBomba);
+            		mapa();
+            		
+            	}
+            	if(escenario[i-1][j].type==5){
+            		escenario[i-1][j].type=3;
+            		escenario[i][j].type=0;
+            		gameOver();
+            	}
+            	if(escenario[i-1][j].type==6){
+            		escenario[i-1][j].type=3;
+            		escenario[i][j].type=0;
+            		masExplosion=true;
+            		if(masExplosion){
+    					setTimeout(fin,8000);
+    				}
+            		mapa();
+            	}
+
+	        break;
+
+            case 40 : 
+            	var jugadorPos=getPlayer();
+            	jugadorPos=jugadorPos.split(":");
+            	var i = parseInt(jugadorPos[0]);
+            	var j = parseInt(jugadorPos[1]); 
+            	if(escenario[i+1][j].type==0 && !escenario[i+1][j].bomba){
+            		escenario[i+1][j].type=3;
+            		escenario[i][j].type=0;
+            		mapa();
+            	}
+            	if(escenario[i+1][j].type==4){
+            		escenario[i+1][j].type=3;
+            		escenario[i][j].type=0;
+            		premioBomba=true;
+            		moreBombs(premioBomba);
+            		mapa();
+            		
+            	}
+            	if(escenario[i+1][j].type==5){
+            		escenario[i+1][j].type=3;
+            		escenario[i][j].type=0;
+            		gameOver();
+            		
+            	}
+            	if(escenario[i+1][j].type==6){
+            		escenario[i+1][j].type=3;
+            		escenario[i][j].type=0;
+            		masExplosion=true;
+            		if(masExplosion){
+    					setTimeout(fin,6000);
+    				}
+            		mapa();
+            	}
+
+	        break;
+
+	        case 32:
+	        	if(premioBomba==true){
+	        	bombs();
+	      		}
+	        	if(!existBomb()	){
+	        		bombs();
+	        		$('.blocks').append('<audio src="./audio/bomba.wav"  autoplay></audio>');
+	        	}
+	        	
+
+	        break;
+
+        }
+    }
+
+
+////////////////game over///////////////////
+
+	function gameOver(){
+		muerte= true;
+		$('#img_jugador').remove();
+		$('#jugador').append('<img src="./img/perdedor.gif" id="img_perdedor">');
+		setTimeout(function(){
+			$('#perdedor').show();
+			},2000);
+		document.onkeydown = function (objeto){
+			        var teclado = objeto.which;
+			        switch (teclado){
+			         
+			            case 32:
+
+			            window.location.reload(); 
+			            break;
+			        }
+			    }
+		
+	}
+
+	function win(){
+		
+		$('#img_jugador').remove();
+		$('#jugador').append('<img src="./img/ganador.gif" id="img_ganador">');
+		setTimeout(function(){$('#ganador').show();},2000);
+			document.onkeydown = function (objeto){
+			        var teclado = objeto.which;
+			        switch (teclado){
+			         
+			            case 32:
+
+			            window.location.reload(); 
+			            break;
+			        }
+			    }
+		
+	}
+
+</script>
+
+</body>
+</html>

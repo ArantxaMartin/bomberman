@@ -1,0 +1,84 @@
+
+		body{
+			background-image: url("../img/fondo.gif");
+
+		}
+		#escenario{
+			position: relative;
+    		width: 28.15em; 
+    		height: 28.2em; 
+    		margin:0 auto;
+    		overflow: hidden;
+
+
+		}
+		.blocks{
+			background-color: green;
+			width: 28.15em; 
+    		height: 28.2em; 
+			position: absolute;
+			margin: auto;
+		}
+		.block{
+			display: inline-block;
+			width: 30px;
+			height: 30px;
+			margin-top: -3.5px;
+		}
+		#bomba, #explosion{
+			position: absolute;
+		}
+		#img_ganador{
+			width: 40px;
+			height: 30px;
+		}
+		#img_perdedor{
+			width: 30px;
+			height: 30px;
+		}
+		#img_block, #img_obstaculo, #suelo, #img_muro,#img_jugador,#img_bomba, #explosion,#img_melon{
+			width: 30px;
+			height: 30px;
+
+		}
+		#ganador{
+			width: 28.15em; 
+    		height: 28.2em; 
+    		margin: 0 auto;
+    		position: absolute;
+		}
+		#perdedor{
+    		position: absolute;
+		}
+
+		.img_perdedor{
+			width: 30em; 
+    		height: 30em; 
+		}
+		
+
+		.slide-fwd-center {
+			-webkit-animation: slide-fwd-center 3s cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s both;
+	        animation: slide-fwd-center 3s cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s both;
+		}
+
+		@-webkit-keyframes slide-fwd-center {
+		  0% {
+		    -webkit-transform: translateZ(0);
+		            transform: translateZ(0);
+		  }
+		  100% {
+		    -webkit-transform: translateZ(160px);
+		            transform: translateZ(160px);
+		  }
+		}
+		@keyframes slide-fwd-center {
+		  0% {
+		    -webkit-transform: translateZ(0);
+		            transform: translateZ(0);
+		  }
+		  100% {
+		    -webkit-transform: translateZ(160px);
+		            transform: translateZ(160px);
+		  }
+		}
